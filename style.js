@@ -16,7 +16,15 @@ function generateArray() {
 
         let bar = document.createElement("div");
         bar.classList.add("bar");
+
+        // Create the number display under each bar
+        let number = document.createElement("div");
+        number.classList.add("bar-number");
+        number.innerText = value;
+
         bar.style.height = `${value}px`;
+
+        bar.appendChild(number);  // Add number under the bar
         barsContainer.appendChild(bar);
     }
 }
@@ -27,6 +35,12 @@ function swap(elements, i, j) {
             let temp = elements[i].style.height;
             elements[i].style.height = elements[j].style.height;
             elements[j].style.height = temp;
+
+            // Swap the numbers under the bars
+            let tempNumber = elements[i].querySelector(".bar-number").innerText;
+            elements[i].querySelector(".bar-number").innerText = elements[j].querySelector(".bar-number").innerText;
+            elements[j].querySelector(".bar-number").innerText = tempNumber;
+
             resolve();
         }, speed);
     });
@@ -92,6 +106,8 @@ async function insertionSort() {
         let j = i - 1;
         while (j >= 0 && array[j] > key) {
             while (isPaused) await new Promise(resolve => setTimeout(resolve, 100));
+            elements[i].style.backgroundColor = "purple";
+            elements[j + 1].style.backgroundColor = "purple";
             elements[j + 1].style.height = elements[j].style.height;
             array[j + 1] = array[j];
             j--;
@@ -128,6 +144,7 @@ async function merge(left, mid, right) {
     for (let k = left, index = 0; k <= right; k++, index++) {
         array[k] = temp[index];
         document.querySelectorAll(".bar")[k].style.height = `${array[k]}px`;
+        document.querySelectorAll(".bar")[k].querySelector(".bar-number").innerText = array[k];  // Update number
         await new Promise(resolve => setTimeout(resolve, speed));
     }
 }
